@@ -87,13 +87,8 @@ namespace WpfApp1
         private void Apply(object obj)
         {
             SaveConfig();
-            ApplyAlgorithmParameters();
-            MessageBox.Show("保存且应用成功");
-        }
-
-        private void ApplyAlgorithmParameters()
-        {
             DataCenter.Instance.SetData("Config", _sureConfig);
+            MessageBox.Show("保存且应用成功");
         }
     }
 }
