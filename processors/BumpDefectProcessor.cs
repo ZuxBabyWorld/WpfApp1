@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WpfApp1;
 
 //凹凸缺陷检测
 public class BumpDefectProcessor : IImageProcessor
@@ -23,6 +24,16 @@ public class BumpDefectProcessor : IImageProcessor
     private HTuple finalArea, finalRow, finalColumn;
 
     private int ngCount = 0;
+
+    // 添加参数设置方法
+    public void SetParametersByConfig(AlgorithmConfig config)
+    {
+        _sigma1 = new HTuple(config.Sigma1);
+        _sigma2 = new HTuple(config.Sigma2);
+        _thresholdRateMax = config.ThresholdRateMax;
+        _selectAreaMin = config.SelectAreaMin;
+        _selectAreaMax = config.SelectAreaMax;
+    }
 
     public HObject Process(HObject sourceImage, HTuple width, HTuple height)
     {
