@@ -20,8 +20,6 @@ namespace WpfApp1
     {
         private string _configFilePath = "AlgorithmConfig.json";
         private AlgorithmConfig _config;
-        public AlgorithmConfig Config { get { return _config; } }
-        private BumpDefectProcessor _bumpProcessor;
 
         public double Sigma1 { get { return _config.Sigma1; } set { _config.Sigma1 = value; NotifyPropertyChanged("Sigma1"); } }
         public double Sigma2 { get { return _config.Sigma2; } set { _config.Sigma2 = value; NotifyPropertyChanged("Sigma2"); } }
@@ -77,13 +75,10 @@ namespace WpfApp1
 
         private void ApplyAlgorithmParameters()
         {
-            _bumpProcessor.SetParametersByConfig(_config);
-        }
-
-        public void SetBumpProcessor(BumpDefectProcessor processor)
-        {
-            _bumpProcessor = processor;
-            ApplyAlgorithmParameters();
+            // 实现应用参数到算法的逻辑
+            // 例如，可以调用 HalconCore 或 BumpDefectProcessor 中的方法
+            // 这里只是示例，需要根据实际情况修改
+            // _core.SetAlgorithmParameters(_config.Sigma1, _config.Sigma2);
         }
     }
 }

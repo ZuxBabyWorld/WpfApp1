@@ -99,18 +99,8 @@ namespace WpfApp1
 
         public MainPageViewModel()
         {
-            Init(new BumpDefectProcessor());
-        }
-
-        public MainPageViewModel(BumpDefectProcessor bumpDefectProcessor)
-        {
-            Init(bumpDefectProcessor);
-        }
-
-        private void Init(BumpDefectProcessor bumpDefectProcessor)
-        {
             _core = new HalconCore();
-            _processor = bumpDefectProcessor;
+            _processor = new BumpDefectProcessor();
             ProcessImage = new SimpleCommand(DoProcessImage);
 
             // 启动显示定时器
