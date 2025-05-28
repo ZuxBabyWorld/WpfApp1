@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="common\DataCenter.cs" />
     <Compile Include="main\ArgsPage\ArgsPageViewModel.cs" />
     <Compile Include="main\MainPage\MainPageViewModel.cs" />
     <Compile Include="main\ArgsPage\ArgsPage.xaml.cs">

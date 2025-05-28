@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml;
 using HalconDotNet;
@@ -7,78 +9,91 @@ using Formatting = Newtonsoft.Json.Formatting;
 
 namespace WpfApp1
 {
-    public class AlgorithmConfig
+    public class Config
     {
         //凹凸缺陷检测
         public double Sigma1 = 5, Sigma2 = 1;
         public double ThresholdRateMax = 0.5;
         public int SelectAreaMin = 1;
         public int SelectAreaMax = 99999;
+
+        public Config Clone()
+        {
+            return new Config
+            {
+                Sigma1 = this.Sigma1,
+                Sigma2 = this.Sigma2,
+                ThresholdRateMax = this.ThresholdRateMax,
+                SelectAreaMin = this.SelectAreaMin,
+                SelectAreaMax = this.SelectAreaMax
+            };
+        }
     }
 
     public class ArgsPageViewModel : ViewModelBase
     {
-        private string _configFilePath = "AlgorithmConfig.json";
-        private AlgorithmConfig _config;
+        private string _configFilePath = "Config.json";
+        private Config _tempConfig;
+        private Config _sureConfig;
 
-        public double Sigma1 { get { return _config.Sigma1; } set { _config.Sigma1 = value; NotifyPropertyChanged("Sigma1"); } }
-        public double Sigma2 { get { return _config.Sigma2; } set { _config.Sigma2 = value; NotifyPropertyChanged("Sigma2"); } }
-        public double ThresholdRateMax { get { return _config.ThresholdRateMax; } set { _config.ThresholdRateMax = value; NotifyPropertyChanged("ThresholdRateMax"); } }
-        public int SelectAreaMin { get { return _config.SelectAreaMin; } set { _config.SelectAreaMin = value; NotifyPropertyChanged("SelectAreaMin"); } }
-        public int SelectAreaMax { get { return _config.SelectAreaMax; } set { _config.SelectAreaMax = value; NotifyPropertyChanged("SelectAreaMax"); } }
+        public double Sigma1 { get { return _tempConfig.Sigma1; } set { _tempConfig.Sigma1 = value; NotifyPropertyChanged("Sigma1"); } }
+        public double Sigma2 { get { return _tempConfig.Sigma2; } set { _tempConfig.Sigma2 = value; NotifyPropertyChanged("Sigma2"); } }
+        public double ThresholdRateMax { get { return _tempConfig.ThresholdRateMax; } set { _tempConfig.ThresholdRateMax = value; NotifyPropertyChanged("ThresholdRateMax"); } }
+        public int SelectAreaMin { get { return _tempConfig.SelectAreaMin; } set { _tempConfig.SelectAreaMin = value; NotifyPropertyChanged("SelectAreaMin"); } }
+        public int SelectAreaMax { get { return _tempConfig.SelectAreaMax; } set { _tempConfig.SelectAreaMax = value; NotifyPropertyChanged("SelectAreaMax"); } }
 
         public ICommand ResetCommand { get; private set; }
         public ICommand ApplyCommand { get; private set; }
 
         public ArgsPageViewModel()
         {
-            LoadConfig();
+            _sureConfig = LoadConfig();
+            _tempConfig = _sureConfig.Clone();
             ResetCommand = new SimpleCommand(Reset);
             ApplyCommand = new SimpleCommand(Apply);
         }
 
-        private void LoadConfig(bool reset = false)
+        private Config LoadConfig(bool reset = false)
         {
             if (reset || !File.Exists(_configFilePath))
             {
-                _config = new AlgorithmConfig();
+                return new Config();
             }
             else
             {
                 string json = File.ReadAllText(_configFilePath);
-                _config = JsonConvert.DeserializeObject<AlgorithmConfig>(json);
+                return JsonConvert.DeserializeObject<Config>(json);
             }
         }
 
         private void SaveConfig()
         {
-            string json = JsonConvert.SerializeObject(_config, Formatting.Indented);
+            _sureConfig = _tempConfig.Clone();
+            string json = JsonConvert.SerializeObject(_sureConfig, Formatting.Indented);
             File.WriteAllText(_configFilePath, json);
         }
 
         private void Reset(object obj)
         {
-            LoadConfig(true);
+            _tempConfig = LoadConfig(true);
             NotifyPropertyChanged("Sigma1");
             NotifyPropertyChanged("Sigma2");
             NotifyPropertyChanged("ThresholdRateMax");
             NotifyPropertyChanged("SelectAreaMin");
             NotifyPropertyChanged("SelectAreaMax");
+            MessageBox.Show("重置成功");
         }
 
         private void Apply(object obj)
         {
             SaveConfig();
-            // 在这里调用影响当前算法的方法
             ApplyAlgorithmParameters();
+            MessageBox.Show("保存且应用成功");
         }
 
         private void ApplyAlgorithmParameters()
         {
-            // 实现应用参数到算法的逻辑
-            // 例如，可以调用 HalconCore 或 BumpDefectProcessor 中的方法
-            // 这里只是示例，需要根据实际情况修改
-            // _core.SetAlgorithmParameters(_config.Sigma1, _config.Sigma2);
+            DataCenter.Instance.SetData("Config", _sureConfig);
         }
     }
 }
