@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="WpfApp1.MainPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:WpfApp1"
+             xmlns:HalconDotNet="clr-namespace:HalconDotNet;assembly=halcondotnet"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <local:MainPageViewModel />
+    </UserControl.DataContext>
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="190"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0"  Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+            <!-- 检测显示 -->
+            <Border Grid.Row="0" Background="{Binding ResultColor}" CornerRadius="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2">
+                <TextBlock Text="{Binding ResultText}" FontSize="72" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <!-- 采样显示 -->
+            <Grid Grid.Row="1">
+                <HalconDotNet:HSmartWindowControlWPF Name="WindowControl" Width="{Binding ElementName=WidthSlider, Path=Value}"
+                                             Height="{Binding ElementName=HeightSlider, Path=Value}"
+                                             Grid.Row="1" Grid.Column="1">
+                    <HalconDotNet:HIconicDisplayObjectWPF IconicObject="{Binding DisplayImage}"/>
+                    <HalconDotNet:HIconicDisplayObjectWPF IconicObject="{Binding DisplayRegion}" HDraw="fill" HColor="red"/>
+                </HalconDotNet:HSmartWindowControlWPF>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                    <TextBlock Text="{Binding DisplayMsg}" Foreground="White" Background="Black" FontSize="20" Margin="10,10,10,10" FontWeight="Bold"/>
+                    <Button Content="ProcessImage" Width="50" Height="25" Command="{Binding ProcessImage}"/>
+                </StackPanel>
+                <Slider Name="HeightSlider" HorizontalAlignment="Right" Minimum="20" Maximum="2048" Value="2048" TickFrequency="1" IsSnapToTickEnabled="True" Orientation="Vertical"/>
+                <Slider Name="WidthSlider" Margin="0,0,50,0" VerticalAlignment="Bottom" Minimum="20" Maximum="2048" Value="2048" TickFrequency="1" IsSnapToTickEnabled="True" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1"  Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!-- 历史数据表格 -->
+            <!-- 统计 -->
+            <GroupBox Grid.Row="1" Header="统计" Margin="5">
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                        <TextBlock Text="总数" Width="78"/>
+                        <TextBlock Text="123456789" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0" Grid.Row="1">
+                        <TextBlock Text="合格数" Width="78"/>
+                        <TextBlock Text="95" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0" Grid.Row="2">
+                        <TextBlock Text="不合格数" Width="78"/>
+                        <TextBlock Text="5" FontWeight="Bold" Foreground="#e74c3c"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0" Grid.Row="3">
+                        <TextBlock Text="合格率" Width="78"/>
+                        <TextBlock Text="95%" FontWeight="Bold"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            <!-- 基本信息 -->
+            <GroupBox Grid.Row="2" Header="信息" Margin="5">
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <StackPanel Orientation="Vertical" Margin="0,2,0,0">
+                        <TextBlock Text="产品批号"/>
+                        <TextBlock Text="PH20250521001" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="班号"/>
+                        <TextBlock Text="A01" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="操作工号"/>
+                        <TextBlock Text="OP1001" FontWeight="Bold"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,137 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:HalconDotNet="clr-namespace:HalconDotNet;assembly=halcondotnet"
+        xmlns:local="clr-namespace:WpfApp1"
+        Title="淋釉缺陷检测系统" Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <local:MainViewModel />
+    </Window.DataContext>
+    <!--全局样式定义-->
+    <Window.Resources>
+        <!--导航按钮样式-->
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Background" Value="#3498db"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                BorderBrush="#2980b9"
+                                BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2980b9"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1a5276"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!--顶部区域-->
+        <Grid.RowDefinitions>
+            <!--顶部信息-->
+            <RowDefinition Height="50"/>
+            <!--主要内容-->
+            <RowDefinition Height="*"/>
+            <!--状态栏-->
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <!--顶部信息-->
+        <Border BorderBrush="Red" BorderThickness="0,0,0,1">
+            <Grid Grid.Row="0">
+                <Grid.Background>
+                    <ImageBrush ImageSource="../images/login_bg.png" Stretch="UniformToFill"/>
+                </Grid.Background>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+                <!--左上角logo-->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="/images/logo.png" Width="100" Height="40" Margin="20,0,20,0" Stretch="Uniform" />
+                    <TextBlock Text="佛山华耀智能科技" Foreground="#0f8b61" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="15" FontWeight="Bold"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0">
+                    <TextBlock Text="淋釉缺陷检测系统" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
+                </StackPanel>
+                <!--右上角用户信息-->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0">
+                    <TextBlock Text="欢迎 [用户001]" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White" FontWeight="Bold"/>
+                    <Button Content="登出" Width="60" Height="20" Background="Orange" Foreground="White"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="123"/>
+                <!-- 侧栏 -->
+                <ColumnDefinition Width="*"/>
+                <!-- 内容页 -->
+            </Grid.ColumnDefinitions>
+
+            <!-- 侧栏 -->
+            <Border Grid.Column="0" Background="#34495e" BorderBrush="Black" BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="200"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Margin="5">
+                        <TextBlock Text="导航菜单" FontSize="13" FontWeight="Bold"  Foreground="White" Margin="5,10,5,10"/>
+                        <Button Content="主页" Style="{StaticResource NavButtonStyle}" Command="{Binding ToMainPage}"/>
+                        <Button Content="用户管理" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="算法参数" Style="{StaticResource NavButtonStyle}" Command="{Binding ToArgsPage}"/>
+                        <Button Content="历史记录" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="统计信息" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="产品信息" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="基础设置" Style="{StaticResource NavButtonStyle}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Margin="5">
+                        <TextBlock Text="检测控制" FontSize="13" FontWeight="Bold"  Foreground="White" Margin="5,10,5,5"/>
+                        <Button Content="启动" Width="120" Height="60"  FontSize="24"
+                                Background="#27ae60" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Margin="0,10,0,0" FontWeight="Bold"/>
+                        <Button Content="停止" Width="120" Height="60"  FontSize="24"
+                                Background="#e74c3c" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Margin="0,10,0,0" FontWeight="Bold"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 内容页 -->
+            <ContentControl Grid.Column="1" Content="{Binding MainContent}"></ContentControl>
+        </Grid>
+        <!-- 状态栏 -->
+        <Grid Grid.Row="2" Background="#34495e">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="运行中 - 正在处理：PH20250521001-001" 
+                   VerticalAlignment="Center" Foreground="White" Margin="10,0,0,0"/>
+            <TextBlock Grid.Column="1" Text="{Binding CurrentTime}" 
+                   VerticalAlignment="Center" HorizontalAlignment="Right" 
+                   Foreground="White" Margin="0,0,10,0"/>
+        </Grid>
+    </Grid>
+</Window>

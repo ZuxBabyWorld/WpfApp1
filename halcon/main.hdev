@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="18.11.0.1">
+<procedure name="main">
+<interface/>
+<body>
+<l>* open_framegrabber ('MVision', 1, 1, 0, 0, 0, 0, 'progressive', 8, 'default', -1, 'false', 'auto', 'GEV:DA5684215 MV-CH100-60GM', 0, -1, AcqHandle)</l>
+<l>open_framegrabber ('DirectShow', 1, 1, 0, 0, 0, 0, 'default', 8, 'rgb', -1, 'false', 'default', '[0] ', 0, -1, AcqHandle)</l>
+<l>grab_image_start (AcqHandle, -1)</l>
+<c></c>
+<l>get_framegrabber_param(AcqHandle,'image_height',Height)</l>
+<l>get_framegrabber_param(AcqHandle,'image_width',Width)</l>
+<c></c>
+<c>* 创建显示窗口</c>
+<l>dev_open_window (0, 0, 640, 512, 'black', WindowHandle)</l>
+<c></c>
+<c>* 优化傅里叶变换速度（对固定尺寸图像只需执行一次）</c>
+<l>* optimize_rft_speed (Width, Height, 'standard')</l>
+<c>* 定义高斯滤波器参数（核心调参部分）</c>
+<c>* 调参建议：Sigma1控制背景抑制强度，增大可过滤更大背景结构</c>
+<c>*   - 典型范围：5-20，表面纹理复杂时增大，光滑表面减小</c>
+<c>*   - 缺陷尺寸大于1cm建议&gt;15，微小缺陷用5-10</c>
+<l>Sigma1 := 5 //可调</l>
+<c>* 调参建议：Sigma2控制缺陷增强程度，减小可突出更细小缺陷</c>
+<c>*   - 典型范围：1-5，噪声较多时适当增大，灵敏度要求高则减小</c>
+<c>*   - 与Sigma1差值建议保持3倍以上确保带通效果</c>
+<l>Sigma2 := 1 //可调</l>
+<c>* 生成低频高斯滤波器（创建背景模型）</c>
+<l>gen_gauss_filter (GaussFilter1, Sigma1, Sigma1, 0.0, 'none', 'rft', Width, Height)</l>
+<c>* 生成高频高斯滤波器（创建缺陷模型）</c>
+<l>gen_gauss_filter (GaussFilter2, Sigma2, Sigma2, 0.0, 'none', 'rft', Width, Height)</l>
+<c>* 组合带通滤波器（通过频域相减突出中间频率）</c>
+<l>sub_image (GaussFilter1, GaussFilter2, Filter, 1, 0)</l>
+<c></c>
+<l>while (true)</l>
+<l>    grab_image_async (Image, AcqHandle, -1)</l>
+<c></c>
+<c>    * 转换为灰度图像（如果是多通道需先转换）</c>
+<l>    rgb1_to_gray (Image, Image)</l>
+<c>    </c>
+<c>    * 执行正向傅里叶变换（频域处理核心步骤）</c>
+<l>    rft_generic (Image, ImageFFT, 'to_freq', 'none', 'complex', Width)</l>
+<c>    * 频域卷积（滤波器应用关键步骤）</c>
+<l>    convol_fft (ImageFFT, Filter, ImageConvol)</l>
+<c>    * 逆向傅里叶变换（转回空间域进行后续分析）</c>
+<l>    rft_generic (ImageConvol, ImageFiltered, 'from_freq', 'n', 'real', Width)</l>
+<c></c>
+<c>    * 局部灰度范围增强（增强缺陷对比度）</c>
+<c>    * 调参建议：10x10邻域大小，增大可平滑噪声但会降低小缺陷灵敏度</c>
+<c>    *   - 邻域尺寸建议为最小缺陷尺寸的1/2，例如5mm缺陷用20x20</c>
+<c>    *   - 噪声较多时可改为15x15，细节丰富场景用5x5</c>
+<l>    gray_range_rect (ImageFiltered, ImageResult, 5, 5) //可调</l>
+<c>    </c>
+<c>    * 获取动态阈值范围（自适应关键步骤）</c>
+<l>    min_max_gray (ImageResult, ImageResult, 0, Min, Max, Range)</l>
+<c>    * 动态阈值分割（核心调参点）</c>
+<c>    * 调参建议：0.8为敏感度系数，范围[0.6-0.95]</c>
+<c>    *   - 误检多时提高至0.85，漏检时降低至0.7</c>
+<c>    *   - 5.55为最小阈值，防止低对比度失效，根据噪声水平调整</c>
+<c>    *   - 高噪声图像建议提高到10-15</c>
+<l>    threshold (ImageResult, RegionDynThresh, max([5.55, Max * 0.5]), 255) //可调</l>
+<c>    * 连通域分析（分割独立缺陷）</c>
+<l>    connection (RegionDynThresh, ConnectedRegions)</l>
+<c>    * 面积筛选（过滤噪声点）</c>
+<c>    * 调参建议：4为最小像素面积，根据成像分辨率调整</c>
+<c>    *   - 计算公式：最小缺陷实际尺寸(mm)/(像素精度mm/像素)^2</c>
+<c>    *   - 例如0.1mm/像素精度，1mm缺陷对应100像素，此处设为80</c>
+<l>    select_shape (ConnectedRegions, SelectedRegions, 'area', 'and', 1, 99999) //可调</l>
+<c>    * 膨胀外环</c>
+<l>    dilation_circle (SelectedRegions, RegionDilation, 5.5)</l>
+<c>    * 将相连的连上</c>
+<l>    union1 (RegionDilation, RegionUnion)</l>
+<c>    </c>
+<c>    * 闭运算处理（弥合细小断裂）</c>
+<c>    * 调参建议：10为结构元素半径，影响缺陷形状完整度</c>
+<c>    *   - 应根据缺陷最小间隙设置，建议为缺陷宽度的1/2</c>
+<c>    *   - 过度弥合会合并相邻缺陷，可减小至5-8</c>
+<l>    closing_circle (RegionUnion, RegionClosing, 10)</l>
+<l>    connection (RegionClosing, ConnectedRegions1)</l>
+<c>    * 最终面积筛选（确定真实缺陷）</c>
+<c>    * 调参建议：10为最终确认阈值，消除残余噪声</c>
+<c>    *   - 应大于初始筛选阈值，建议2-3倍初始值</c>
+<c>    *   - 可根据样本统计设置，如均值-3sigma</c>
+<l>    select_shape (ConnectedRegions1, SelectedRegions1, 'area', 'and', 1, 99999)</l>
+<c>    * 面积中心</c>
+<l>    area_center (SelectedRegions1, Area, Row, Column)</l>
+<l>    Number := |Area|</l>
+<l>    ResultMessage := ['疑似缺陷 ' + Number + '个']</l>
+<l>    Color := ['black']</l>
+<c>    </c>
+<l>    dev_display(Image)</l>
+<l>    dev_display (SelectedRegions1) //直接显示缺陷区域轮廓</l>
+<c>    * 显示位置调参：12,12为文本位置，根据图像内容调整避免遮挡</c>
+<l>    disp_message (WindowHandle, ResultMessage, 'window', 12, 12, Color, 'true')</l>
+<l>    stop ()</l>
+<l>endwhile</l>
+<l>close_framegrabber (AcqHandle)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
