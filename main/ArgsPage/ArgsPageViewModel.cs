@@ -2,51 +2,12 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml;
-using HalconDotNet;
-using Newtonsoft.Json;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace WpfApp1
 {
-    public class Config
-    {
-        //通用
-        public int DelayFristImageMs = 500;
-        public int InternalImageMs = 200;
-        public int ImageCount = 3;
-        public int ImageShowMs = 300;
-
-        //凹凸缺陷检测
-        public double Sigma1 = 5, Sigma2 = 1;
-        public double ThresholdRateMax = 0.5;
-        public int SelectAreaMin = 1;
-        public int SelectAreaMax = 99999;
-
-        public Config Clone()
-        {
-            return new Config
-            {
-                DelayFristImageMs = this.DelayFristImageMs,
-                InternalImageMs = this.InternalImageMs,
-                ImageCount = this.ImageCount,
-                ImageShowMs = this.ImageShowMs,
-
-                Sigma1 = this.Sigma1,
-                Sigma2 = this.Sigma2,
-                ThresholdRateMax = this.ThresholdRateMax,
-                SelectAreaMin = this.SelectAreaMin,
-                SelectAreaMax = this.SelectAreaMax
-            };
-        }
-    }
-
     public class ArgsPageViewModel : ViewModelBase
     {
-        private string _configFilePath = "Config.json";
         private Config _tempConfig;
-        private Config _sureConfig;
-
 
         public int DelayFristImageMs { get { return _tempConfig.DelayFristImageMs; } set { _tempConfig.DelayFristImageMs = value; NotifyPropertyChanged("Sigma1"); } }
         public int InternalImageMs { get { return _tempConfig.InternalImageMs; } set { _tempConfig.InternalImageMs = value; NotifyPropertyChanged("Sigma1"); } }
@@ -64,35 +25,20 @@ namespace WpfApp1
 
         public ArgsPageViewModel()
         {
-            _sureConfig = LoadConfig();
-            _tempConfig = _sureConfig.Clone();
+            _tempConfig = ConfigManager.Instance.GetConfigClone();
             ResetCommand = new SimpleCommand(Reset);
             ApplyCommand = new SimpleCommand(Apply);
         }
 
-        private Config LoadConfig(bool reset = false)
-        {
-            if (reset || !File.Exists(_configFilePath))
-            {
-                return new Config();
-            }
-            else
-            {
-                string json = File.ReadAllText(_configFilePath);
-                return JsonConvert.DeserializeObject<Config>(json);
-            }
-        }
-
         private void SaveConfig()
         {
-            _sureConfig = _tempConfig.Clone();
-            string json = JsonConvert.SerializeObject(_sureConfig, Formatting.Indented);
-            File.WriteAllText(_configFilePath, json);
+            ConfigManager.Instance.SaveConfig(_tempConfig);
         }
 
         private void Reset(object obj)
         {
-            _tempConfig = LoadConfig(true);
+            ConfigManager.Instance.ResetConfig(true);
+            _tempConfig = ConfigManager.Instance.GetConfigClone();
             NotifyPropertyChanged("DelayFristImageMs");
             NotifyPropertyChanged("InternalImageMs");
             NotifyPropertyChanged("ImageCount");
@@ -109,7 +55,6 @@ namespace WpfApp1
         private void Apply(object obj)
         {
             SaveConfig();
-            DataCenter.Instance.SetData("Config", _sureConfig);
             MessageBox.Show("保存且应用成功");
         }
     }

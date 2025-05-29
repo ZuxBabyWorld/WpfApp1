@@ -105,7 +105,7 @@ namespace WpfApp1
 
             // 启动显示定时器
             _displayTimer = new DispatcherTimer();
-            Config config = DataCenter.Instance.GetData<Config>("Config");
+            Config config = ConfigManager.Instance.GetConfig();
             _displayTimer.Interval = TimeSpan.FromMilliseconds(config.ImageShowMs);
             _displayTimer.Tick += DisplayTimer_Tick;
             _displayTimer.Start();

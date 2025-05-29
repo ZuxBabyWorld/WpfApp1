@@ -22,7 +22,7 @@ namespace WpfApp1
 
         public HObject Process(HObject sourceImage, HTuple width, HTuple height)
         {
-            Config config = DataCenter.Instance.GetData<Config>("Config");
+            Config config = ConfigManager.Instance.GetConfig();
 
             // 傅里叶变换滤波
             HOperatorSet.RftGeneric(sourceImage, out fftImage, "to_freq", "none", "complex", width);

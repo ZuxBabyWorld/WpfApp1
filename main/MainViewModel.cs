@@ -58,14 +58,14 @@ namespace WpfApp1
         {
             _listenCallCount = 0;
             _listenTimer = new DispatcherTimer();
-            Config config = DataCenter.Instance.GetData<Config>("Config");
+            Config config = ConfigManager.Instance.GetConfig();
             _listenTimer.Interval = TimeSpan.FromMilliseconds(config.DelayFristImageMs);
             _listenTimer.Tick += OnTargetTick;
             _listenTimer.Start();
         }
         private void OnTargetTick(object sender, EventArgs e)
         {
-            Config config = DataCenter.Instance.GetData<Config>("Config");
+            Config config = ConfigManager.Instance.GetConfig();
             if (_listenCallCount < config.ImageCount)
             {
                 _listenCallCount++;
