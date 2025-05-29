@@ -105,7 +105,8 @@ namespace WpfApp1
 
             // 启动显示定时器
             _displayTimer = new DispatcherTimer();
-            _displayTimer.Interval = TimeSpan.FromSeconds(0.5);
+            Config config = DataCenter.Instance.GetData<Config>("Config");
+            _displayTimer.Interval = TimeSpan.FromMilliseconds(config.ImageShowMs);
             _displayTimer.Tick += DisplayTimer_Tick;
             _displayTimer.Start();
 
@@ -113,7 +114,7 @@ namespace WpfApp1
             ThreadPool.QueueUserWorkItem(ProcessQueue);
         }
 
-        private void DoProcessImage(Object obj)
+        public void DoProcessImage(Object obj = null)
         {
             // 打开相机
             if (_core.OpenCamera() == null)

@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WpfApp1
 {
@@ -21,6 +22,17 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
+        }
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (DataContext is MainViewModel mv)
+            {
+                if (mv.IsListenKey && e.Key == Key.F1)
+                {
+                    mv.OnTargetComeTrigger();
+                }
+            }
+            base.OnKeyDown(e);
         }
     }
 }

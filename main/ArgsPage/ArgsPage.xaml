@@ -14,33 +14,51 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <!-- 通用 -->
+            <GroupBox Header="通用" Margin="10">
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="延迟采样(毫秒):" Width="100"/>
+                        <TextBox Text="{Binding DelayFristImageMs, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="采样间隔(毫秒):" Width="100"/>
+                        <TextBox Text="{Binding InternalImageMs, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="采样数:" Width="100"/>
+                        <TextBox Text="{Binding ImageCount, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
 
-        <!-- 凹凸缺陷检测 -->
-        <GroupBox Header="凹凸缺陷检测" Margin="10" Grid.Row="0">
-            <StackPanel Orientation="Vertical" Margin="10">
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Sigma1:" Width="100"/>
-                    <TextBox Text="{Binding Sigma1, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+            <!-- 凹凸缺陷检测 -->
+            <GroupBox Header="凹凸缺陷检测" Margin="10">
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="Sigma1:" Width="100"/>
+                        <TextBox Text="{Binding Sigma1, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="Sigma2:" Width="100"/>
+                        <TextBox Text="{Binding Sigma2, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="ThresholdRateMax:" Width="100"/>
+                        <TextBox Text="{Binding ThresholdRateMax, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="SelectAreaMin:" Width="100"/>
+                        <TextBox Text="{Binding SelectAreaMin, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="SelectAreaMax:" Width="100"/>
+                        <TextBox Text="{Binding SelectAreaMax, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Sigma2:" Width="100"/>
-                    <TextBox Text="{Binding Sigma2, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="ThresholdRateMax:" Width="100"/>
-                    <TextBox Text="{Binding ThresholdRateMax, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="SelectAreaMin:" Width="100"/>
-                    <TextBox Text="{Binding SelectAreaMin, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="SelectAreaMax:" Width="100"/>
-                    <TextBox Text="{Binding SelectAreaMax, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
-                </StackPanel>
-                <!-- 可以根据需要添加更多参数 -->
-            </StackPanel>
-        </GroupBox>
+            </GroupBox>
+        </StackPanel>
 
         <!-- 按钮区域 -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" Grid.Row="1">

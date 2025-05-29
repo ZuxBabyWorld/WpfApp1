@@ -109,10 +109,10 @@
                         <TextBlock Text="检测控制" FontSize="13" FontWeight="Bold"  Foreground="White" Margin="5,10,5,5"/>
                         <Button Content="启动" Width="120" Height="60"  FontSize="24"
                                 Background="#27ae60" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Margin="0,10,0,0" FontWeight="Bold"/>
+                                Margin="0,10,0,0" FontWeight="Bold" Command="{Binding StartListen}"/>
                         <Button Content="停止" Width="120" Height="60"  FontSize="24"
                                 Background="#e74c3c" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Margin="0,10,0,0" FontWeight="Bold"/>
+                                Margin="0,10,0,0" FontWeight="Bold" Command="{Binding StopListen}"/>
                     </StackPanel>
                 </Grid>
             </Border>

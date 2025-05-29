@@ -11,6 +11,12 @@ namespace WpfApp1
 {
     public class Config
     {
+        //通用
+        public int DelayFristImageMs = 500;
+        public int InternalImageMs = 200;
+        public int ImageCount = 3;
+        public int ImageShowMs = 300;
+
         //凹凸缺陷检测
         public double Sigma1 = 5, Sigma2 = 1;
         public double ThresholdRateMax = 0.5;
@@ -21,6 +27,11 @@ namespace WpfApp1
         {
             return new Config
             {
+                DelayFristImageMs = this.DelayFristImageMs,
+                InternalImageMs = this.InternalImageMs,
+                ImageCount = this.ImageCount,
+                ImageShowMs = this.ImageShowMs,
+
                 Sigma1 = this.Sigma1,
                 Sigma2 = this.Sigma2,
                 ThresholdRateMax = this.ThresholdRateMax,
@@ -35,6 +46,12 @@ namespace WpfApp1
         private string _configFilePath = "Config.json";
         private Config _tempConfig;
         private Config _sureConfig;
+
+
+        public int DelayFristImageMs { get { return _tempConfig.DelayFristImageMs; } set { _tempConfig.DelayFristImageMs = value; NotifyPropertyChanged("Sigma1"); } }
+        public int InternalImageMs { get { return _tempConfig.InternalImageMs; } set { _tempConfig.InternalImageMs = value; NotifyPropertyChanged("Sigma1"); } }
+        public int ImageCount { get { return _tempConfig.ImageCount; } set { _tempConfig.ImageCount = value; NotifyPropertyChanged("Sigma1"); } }
+        public int ImageShowMs { get { return _tempConfig.ImageShowMs; } set { _tempConfig.ImageShowMs = value; NotifyPropertyChanged("Sigma1"); } }
 
         public double Sigma1 { get { return _tempConfig.Sigma1; } set { _tempConfig.Sigma1 = value; NotifyPropertyChanged("Sigma1"); } }
         public double Sigma2 { get { return _tempConfig.Sigma2; } set { _tempConfig.Sigma2 = value; NotifyPropertyChanged("Sigma2"); } }
@@ -76,6 +93,11 @@ namespace WpfApp1
         private void Reset(object obj)
         {
             _tempConfig = LoadConfig(true);
+            NotifyPropertyChanged("DelayFristImageMs");
+            NotifyPropertyChanged("InternalImageMs");
+            NotifyPropertyChanged("ImageCount");
+            NotifyPropertyChanged("ImageShowMs");
+
             NotifyPropertyChanged("Sigma1");
             NotifyPropertyChanged("Sigma2");
             NotifyPropertyChanged("ThresholdRateMax");
