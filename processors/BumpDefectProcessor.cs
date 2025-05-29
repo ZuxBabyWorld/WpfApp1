@@ -22,8 +22,7 @@ namespace WpfApp1
 
         public HObject Process(HObject sourceImage, HTuple width, HTuple height)
         {
-            Config config = ConfigManager.Instance.GetConfig();
-
+            ArgsConfig config = ConfigManager.Instance.GetConfig().argsConfig;
             // 傅里叶变换滤波
             HOperatorSet.RftGeneric(sourceImage, out fftImage, "to_freq", "none", "complex", width);
             HOperatorSet.GenGaussFilter(out gaussFilter1, config.Sigma1, config.Sigma1, 0, "none", "rft", width, height);

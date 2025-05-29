@@ -58,14 +58,14 @@ namespace WpfApp1
         {
             _listenCallCount = 0;
             _listenTimer = new DispatcherTimer();
-            Config config = ConfigManager.Instance.GetConfig();
+            CommonConfig config = ConfigManager.Instance.GetConfig().commonConfig;
             _listenTimer.Interval = TimeSpan.FromMilliseconds(config.DelayFristImageMs);
             _listenTimer.Tick += OnTargetTick;
             _listenTimer.Start();
         }
         private void OnTargetTick(object sender, EventArgs e)
         {
-            Config config = ConfigManager.Instance.GetConfig();
+            CommonConfig config = ConfigManager.Instance.GetConfig().commonConfig;
             if (_listenCallCount < config.ImageCount)
             {
                 _listenCallCount++;
@@ -90,6 +90,12 @@ namespace WpfApp1
             _isListenKey = false;
         }
 
+        public SimpleCommand ToSettingPage { get; private set; }
+        private void DoToSettingPage(Object obj)
+        {
+            ChangeMainContent(new SettingPage());
+        }
+
         public MainViewModel()
         {
             ChangeMainContent(_mainPage);
@@ -97,6 +103,7 @@ namespace WpfApp1
             ToArgsPage = new SimpleCommand(DoToArgsPage);
             StartListen = new SimpleCommand(DoStartListen);
             StopListen = new SimpleCommand(DoStopListen);
+            ToSettingPage = new SimpleCommand(DoToSettingPage);
         }
     }
 }

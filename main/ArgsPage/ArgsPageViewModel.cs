@@ -7,54 +7,55 @@ namespace WpfApp1
 {
     public class ArgsPageViewModel : ViewModelBase
     {
-        private Config _tempConfig;
+        private double _sigma1, _sigma2 ;
+        private double _thresholdRateMax;
+        private int _selectAreaMin;
+        private int _selectAreaMax;
 
-        public int DelayFristImageMs { get { return _tempConfig.DelayFristImageMs; } set { _tempConfig.DelayFristImageMs = value; NotifyPropertyChanged("Sigma1"); } }
-        public int InternalImageMs { get { return _tempConfig.InternalImageMs; } set { _tempConfig.InternalImageMs = value; NotifyPropertyChanged("Sigma1"); } }
-        public int ImageCount { get { return _tempConfig.ImageCount; } set { _tempConfig.ImageCount = value; NotifyPropertyChanged("Sigma1"); } }
-        public int ImageShowMs { get { return _tempConfig.ImageShowMs; } set { _tempConfig.ImageShowMs = value; NotifyPropertyChanged("Sigma1"); } }
-
-        public double Sigma1 { get { return _tempConfig.Sigma1; } set { _tempConfig.Sigma1 = value; NotifyPropertyChanged("Sigma1"); } }
-        public double Sigma2 { get { return _tempConfig.Sigma2; } set { _tempConfig.Sigma2 = value; NotifyPropertyChanged("Sigma2"); } }
-        public double ThresholdRateMax { get { return _tempConfig.ThresholdRateMax; } set { _tempConfig.ThresholdRateMax = value; NotifyPropertyChanged("ThresholdRateMax"); } }
-        public int SelectAreaMin { get { return _tempConfig.SelectAreaMin; } set { _tempConfig.SelectAreaMin = value; NotifyPropertyChanged("SelectAreaMin"); } }
-        public int SelectAreaMax { get { return _tempConfig.SelectAreaMax; } set { _tempConfig.SelectAreaMax = value; NotifyPropertyChanged("SelectAreaMax"); } }
+        public double Sigma1 { get { return _sigma1; } set { _sigma1 = value; NotifyPropertyChanged("Sigma1"); } }
+        public double Sigma2 { get { return _sigma2; } set { _sigma2 = value; NotifyPropertyChanged("Sigma2"); } }
+        public double ThresholdRateMax { get { return _thresholdRateMax; } set { _thresholdRateMax = value; NotifyPropertyChanged("ThresholdRateMax"); } }
+        public int SelectAreaMin { get { return _selectAreaMin; } set { _selectAreaMin = value; NotifyPropertyChanged("SelectAreaMin"); } }
+        public int SelectAreaMax { get { return _selectAreaMax; } set { _selectAreaMax = value; NotifyPropertyChanged("SelectAreaMax"); } }
 
         public ICommand ResetCommand { get; private set; }
         public ICommand ApplyCommand { get; private set; }
 
         public ArgsPageViewModel()
         {
-            _tempConfig = ConfigManager.Instance.GetConfigClone();
+            Config config = ConfigManager.Instance.GetConfig();
+            SetValues(config.argsConfig);
             ResetCommand = new SimpleCommand(Reset);
             ApplyCommand = new SimpleCommand(Apply);
         }
 
-        private void SaveConfig()
+        private void SetValues(ArgsConfig config = null)
         {
-            ConfigManager.Instance.SaveConfig(_tempConfig);
+            if (config == null)
+            {
+                config = new ArgsConfig();
+            }
+            Sigma1 = config.Sigma1;
+            Sigma2 = config.Sigma2;
+            ThresholdRateMax = config.ThresholdRateMax;
+            SelectAreaMin = config.SelectAreaMin;
+            SelectAreaMax = config.SelectAreaMax;
         }
 
         private void Reset(object obj)
         {
-            ConfigManager.Instance.ResetConfig(true);
-            _tempConfig = ConfigManager.Instance.GetConfigClone();
-            NotifyPropertyChanged("DelayFristImageMs");
-            NotifyPropertyChanged("InternalImageMs");
-            NotifyPropertyChanged("ImageCount");
-            NotifyPropertyChanged("ImageShowMs");
-
-            NotifyPropertyChanged("Sigma1");
-            NotifyPropertyChanged("Sigma2");
-            NotifyPropertyChanged("ThresholdRateMax");
-            NotifyPropertyChanged("SelectAreaMin");
-            NotifyPropertyChanged("SelectAreaMax");
-            MessageBox.Show("重置成功");
+            SetValues();
         }
 
         private void Apply(object obj)
         {
-            SaveConfig();
+            ArgsConfig config = ConfigManager.Instance.GetConfig().argsConfig;
+            config.Sigma1 = this.Sigma1;
+            config.Sigma2 = this.Sigma2;
+            config.ThresholdRateMax = this.ThresholdRateMax;
+            config.SelectAreaMin = this.SelectAreaMin;
+            config.SelectAreaMax = this.SelectAreaMax;
+            ConfigManager.Instance.SaveConfig();
             MessageBox.Show("保存且应用成功");
         }
     }

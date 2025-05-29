@@ -31,20 +31,10 @@ namespace WpfApp1
             _config = JsonConvert.DeserializeObject<Config>(json);
         }
 
-        public void SaveConfig(Config config)
+        public void SaveConfig()
         {
-            _config = config.Clone();
             string json = JsonConvert.SerializeObject(_config, Formatting.Indented);
             File.WriteAllText(_configFilePath, json);
-        }
-
-        public void ResetConfig(bool isSave)
-        {
-            _config = new Config();
-            if (isSave)
-            {
-                SaveConfig(_config);
-            }
         }
 
         public Config GetConfig()
@@ -54,10 +44,6 @@ namespace WpfApp1
                 LoadConfig();
             }
             return _config;
-        }
-        public Config GetConfigClone()
-        {
-            return GetConfig().Clone();
         }
     }
 }

@@ -97,13 +97,13 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Margin="5">
                         <TextBlock Text="导航菜单" FontSize="13" FontWeight="Bold"  Foreground="White" Margin="5,10,5,10"/>
-                        <Button Content="主页" Style="{StaticResource NavButtonStyle}" Command="{Binding ToMainPage}"/>
+                        <Button Content="主控界面" Style="{StaticResource NavButtonStyle}" Command="{Binding ToMainPage}"/>
                         <Button Content="用户管理" Style="{StaticResource NavButtonStyle}"/>
-                        <Button Content="算法参数" Style="{StaticResource NavButtonStyle}" Command="{Binding ToArgsPage}"/>
                         <Button Content="历史记录" Style="{StaticResource NavButtonStyle}"/>
                         <Button Content="统计信息" Style="{StaticResource NavButtonStyle}"/>
                         <Button Content="产品信息" Style="{StaticResource NavButtonStyle}"/>
-                        <Button Content="基础设置" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="调试参数" Style="{StaticResource NavButtonStyle}" Command="{Binding ToArgsPage}"/>
+                        <Button Content="设置" Style="{StaticResource NavButtonStyle}" Command="{Binding ToSettingPage}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Margin="5">
                         <TextBlock Text="检测控制" FontSize="13" FontWeight="Bold"  Foreground="White" Margin="5,10,5,5"/>
