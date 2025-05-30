@@ -7,6 +7,12 @@ namespace WpfApp1
         public int InternalImageMs = 200;
         public int ImageCount = 3;
         public int ImageShowMs = 300;
+
+        public string LightComName = "COM1";
+        public int LightComBaudRate = 115200;
+        public int LightComDataBit = 8;
+        public int LightComStopBit = 1;
+        public int LightComSdd = 0;
     }
     public class ArgsConfig
     {

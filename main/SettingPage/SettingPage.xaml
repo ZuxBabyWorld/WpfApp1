@@ -36,30 +36,32 @@
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="光源继电器" Margin="5">
+                <GroupBox Header="光源" Margin="5">
                     <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal" Margin="5" Height="20">
+                        <StackPanel Orientation="Horizontal" Height="20" Margin="5">
                             <TextBlock Text="端口:" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="lightComboBoxCOM" Width="90"/>
-                            <Button Content="扫描" Click="Find_Click" Margin="5,0,0,0"/>
+                            <TextBox Text="{Binding LightComName, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5" Height="20">
+                        <StackPanel Orientation="Horizontal" Height="20" Margin="5">
                             <TextBlock Text="波特率:" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="lightComboBoxBaudRate" Width="90"/>
+                            <TextBox Text="{Binding LightComBaudRate, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5" Height="20">
+                        <StackPanel Orientation="Horizontal" Height="20" Margin="5">
                             <TextBlock Text="数据位:" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="lightComboBoxDataBit" Width="90"/>
+                            <TextBox Text="{Binding LightComDataBit, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5" Height="20">
+                        <StackPanel Orientation="Horizontal" Height="20" Margin="5">
                             <TextBlock Text="停止位:" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="lightComboBoxStopBit" Width="90"/>
+                            <TextBox Text="{Binding LightComStopBit, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5" Height="20">
+                        <StackPanel Orientation="Horizontal" Height="20" Margin="5">
                             <TextBlock Text="校验位:" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="lightComboBoxSdd" Width="90"/>
+                            <TextBox Text="{Binding LightComSdd, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                         </StackPanel>
                     </StackPanel>
+                </GroupBox>
+                <GroupBox Header="小工具" Margin="5">
+                    <Button Content="串口调试工具" Width="100" HorizontalAlignment="Left" Margin="5" Command="{Binding OpenUartWinCommand}"/>
                 </GroupBox>
             </StackPanel>
         </ScrollViewer>

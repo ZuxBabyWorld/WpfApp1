@@ -68,7 +68,7 @@
                 <!--左上角logo-->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <Image Source="/images/logo.png" Width="100" Height="40" Margin="20,0,20,0" Stretch="Uniform" />
-                    <TextBlock Text="佛山华耀智能科技" Foreground="#0f8b61" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="15" FontWeight="Bold"/>
+                    <TextBlock Text="佛山华耀自动化科技" Foreground="#0f8b61" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="15" FontWeight="Bold"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0">
                     <TextBlock Text="淋釉缺陷检测系统" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>

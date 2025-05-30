@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Threading;
 
 namespace WpfApp1
@@ -16,7 +18,7 @@ namespace WpfApp1
         //主页
         private MainPage _mainPage = new MainPage();
 
-        private DispatcherTimer _listenTimer;
+        private DispatcherTimer _listenTimer = null;
         private int _listenCallCount = 0;
 
         private Frame _mainContent;
@@ -56,31 +58,43 @@ namespace WpfApp1
         }
         public void OnTargetComeTrigger()
         {
+            if (_listenTimer != null)
+            {
+                MessageBox.Show("还在处理上次触发");
+                return;
+            }
             _listenCallCount = 0;
             _listenTimer = new DispatcherTimer();
             CommonConfig config = ConfigManager.Instance.GetConfig().commonConfig;
-            _listenTimer.Interval = TimeSpan.FromMilliseconds(config.DelayFristImageMs);
+            _listenTimer.Interval = TimeSpan.FromMilliseconds(1);
             _listenTimer.Tick += OnTargetTick;
             _listenTimer.Start();
         }
         private void OnTargetTick(object sender, EventArgs e)
         {
             CommonConfig config = ConfigManager.Instance.GetConfig().commonConfig;
-            if (_listenCallCount < config.ImageCount)
+            if (_listenCallCount == 0)
             {
-                _listenCallCount++;
+                _listenCallCount = 1;
+                _listenTimer.Interval = TimeSpan.FromMilliseconds(config.DelayFristImageMs);
+                Debug.WriteLine("打开光源1");
+                LightManager.Instance.OpenLight();
+            }
+            else if (_listenCallCount >=1 && _listenCallCount < (1 + config.ImageCount))
+            {   
+                ++_listenCallCount;
+                _listenTimer.Interval = TimeSpan.FromMilliseconds(config.InternalImageMs);
                 if (_mainPage.DataContext is MainPageViewModel mv)
                 {
+                    Debug.WriteLine("采集图像");
                     mv.DoProcessImage();
                 }
-                if (_listenCallCount == 1)
-                {
-                    _listenTimer.Interval = TimeSpan.FromMilliseconds(config.InternalImageMs);
-                }
-            }
-            else
+            }else
             {
                 _listenTimer.Stop();
+                _listenTimer = null;
+                Debug.WriteLine("结束");
+                LightManager.Instance.CloseLight();
             }
         }
 

@@ -19,7 +19,7 @@
         <StackPanel Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <!-- 标题 -->
             <Image Source="/images/logo.png" Width="200" Height="90" Stretch="Uniform" />
-            <TextBlock Text="佛山华耀智能科技" Foreground="#0f8b61" FontSize="25" FontWeight="Bold" Margin="30,0,0,0"/>
+            <TextBlock Text="佛山华耀自动化科技" Foreground="#0f8b61" FontSize="25" FontWeight="Bold" Margin="30,0,0,0"/>
             <StackPanel Orientation="Horizontal" Margin="30,0,0,0">
                 <TextBlock Text="欢迎您使用 " Foreground="CornflowerBlue" FontSize="24" FontWeight="Bold"/>
                 <TextBlock Text="淋釉检测系统" Foreground="#0f8b61" FontSize="24" FontWeight="Bold"/>
